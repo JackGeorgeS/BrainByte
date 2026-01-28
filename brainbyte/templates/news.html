@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BrainByte - System Updates</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="edge-light"></div>
+
+<header class="menu">
+    <div class="menu-left">
+        <div class="icon">
+            <img src="/static/brain.png" alt="BrainByte Logo">
+        </div>
+        <a href="/" class="si-buttons-scifi__style-5__button-2">
+            <span>Home</span><helper-1></helper-1><helper-2></helper-2><shine></shine><ripple></ripple>
+        </a>
+    </div>
+
+    <div class="menu-right">
+        {% if not logged_in %}
+        <a href="/login" class="si-buttons-scifi__style-5__button-2">
+            <span>Login</span><helper-1></helper-1><helper-2></helper-2><shine></shine><ripple></ripple>
+        </a>
+        {% else %}
+        <a href="/map" class="si-buttons-scifi__style-5__button-2">
+            <span>Map</span><helper-1></helper-1><helper-2></helper-2><shine></shine><ripple></ripple>
+        </a>
+        {% endif %}
+    </div>
+</header>
+
+<main class="content">
+    <div class="review-form-container" style="text-align: left; max-width: 900px;">
+        <h2>Global Transmissions</h2>
+        
+        {% for update in news_updates %}
+        <div class="news-item" style="border-bottom: 1px solid rgba(71, 183, 216, 0.2); padding: 20px 0; margin-bottom: 10px;">
+            <div style="color: #47b7d8; font-family: monospace; font-size: 0.85rem; margin-bottom: 5px;">
+                TIMESTAMP: {{ update.date }} | ID: {{ update.id }}
+            </div>
+            <h3 style="color: #ffffff; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">
+                {{ update.title }}
+            </h3>
+            
+            <div class="news-content-wrapper collapsed">
+                <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.5;">
+                    {{ update.content }}
+                </p>
+            </div>
+
+            <button class="read-more-btn si-buttons-scifi__style-5__button-2" 
+                    onclick="toggleReadMore(this)" 
+                    style="display: none; margin-top: 10px; padding: 5px 15px; min-height: unset; font-size: 12px;">
+                <span>Read More</span>
+                <helper-1></helper-1><helper-2></helper-2><shine></shine><ripple></ripple>
+            </button>
+        </div>
+        {% endfor %}
+
+        <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const newsItems = document.querySelectorAll('.news-item');
+            
+            newsItems.forEach(item => {
+                const wrapper = item.querySelector('.news-content-wrapper');
+                const btn = item.querySelector('.read-more-btn');
+                
+                // Check if the scrollHeight (total height) is bigger than the visible height (60px)
+                // We use 65 to give it a little "buffer" space
+                if (wrapper.scrollHeight > 65) {
+                    btn.style.display = 'inline-flex'; // Show button if text is long
+                } else {
+                    wrapper.classList.remove('collapsed'); // Remove fade if text is short
+                }
+            });
+        });
+
+        function toggleReadMore(btn) {
+            const wrapper = btn.previousElementSibling;
+            const isCollapsed = wrapper.classList.toggle('collapsed');
+            btn.querySelector('span').innerText = isCollapsed ? 'Read More' : 'Read Less';
+        }
+        </script>
+
+    </div>
+</main>
+
+</body>
+</html>

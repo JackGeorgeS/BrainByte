@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BrainByte - Mission Briefing</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="edge-light"></div>
+
+<header class="menu">
+    <div class="menu-left">
+        <div class="icon">
+            <img src="/static/brain.png" alt="BrainByte Logo">
+        </div>
+        <a href="/" class="si-buttons-scifi__style-5__button-2">
+            <span>Home</span><helper-1></helper-1><helper-2></helper-2><shine></shine><ripple></ripple>
+        </a>
+    </div>
+
+    <div class="menu-right">
+        {% if not logged_in %}
+        <a href="/login" class="si-buttons-scifi__style-5__button-2">
+            <span>Login</span><helper-1></helper-1><helper-2></helper-2><shine></shine><ripple></ripple>
+        </a>
+        {% else %}
+        <a href="/map" class="si-buttons-scifi__style-5__button-2">
+            <span>Return to Map</span><helper-1></helper-1><helper-2></helper-2><shine></shine><ripple></ripple>
+        </a>
+        {% endif %}
+    </div>
+</header>
+
+<main class="content">
+    <div class="review-form-container" style="text-align: left; max-width: 800px;">
+        <h2>Project: BrainByte</h2>
+        <p><strong>MISSION OBJECTIVE:</strong> To bridge the gap between complex logic and interactive entertainment.</p>
+        
+        <div style="margin-top: 20px; color: #ffffff; line-height: 1.6;">
+            <p>We built <strong>BrainByte</strong> because we believe that learning to code shouldn't feel like reading a manual—it should feel like an adventure. In a world increasingly driven by software, the barrier to entry for programming can often feel cold and intimidating.</p>
+            
+            <p>Our goal was to create a "Neural Interface" where players can sharpen their Python skills through tactical challenges, visual progression, and a rewarding experience system. We want every operative to leave this platform with the confidence to build their own reality through code.</p>
+        </div>
+
+        <div style="border-top: 1px solid rgba(71, 183, 216, 0.3); margin-top: 30px; padding-top: 20px;">
+            <p style="font-family: monospace; color: #47b7d8; font-size: 0.9rem;">
+                [STATUS: ENCRYPTED]<br>
+                [AUTHOR: CORE DEVELOPMENT TEAM]<br>
+                [VERSION: 1.0.4]
+            </p>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

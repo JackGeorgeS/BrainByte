@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>BrainByte</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='signin.css') }}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='map.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+</head>
+<body>
+<div id="system-terminal" class="system-terminal" style="display: none;"></div>
+<header class="menu">
+  <div class="menu-left">
+      <div class="icon">
+          <img src="/static/brain.png" alt="BrainByte Logo">
+      </div>
+
+      <a href="/" class="si-buttons-scifi__style-5__button-2">
+          <span>Home</span>
+          <helper-1></helper-1>
+          <helper-2></helper-2>
+          <shine></shine>
+          <ripple></ripple>
+      </a>
+      <a href="/about" class="si-buttons-scifi__style-5__button-2">
+          <span>About us</span>
+          <helper-1></helper-1>
+          <helper-2></helper-2>
+          <shine></shine>
+          <ripple></ripple>
+      </a>
+      <a href="/news" class="si-buttons-scifi__style-5__button-2">
+          <span>News</span>
+          <helper-1></helper-1>
+          <helper-2></helper-2>
+          <shine></shine>
+          <ripple></ripple>
+      </a>
+      <a href="/contact" class="si-buttons-scifi__style-5__button-2">
+          <span>Contact</span>
+          <helper-1></helper-1>
+          <helper-2></helper-2>
+          <shine></shine>
+          <ripple></ripple>
+      </a>
+  </div>
+
+  <div class="menu-right">
+    {% if not logged_in %}
+        <a href="/signin" class="si-buttons-scifi__style-5__button-2">
+            <span>Sign in</span>
+            <helper-1></helper-1>
+            <helper-2></helper-2>
+            <shine></shine>
+            <ripple></ripple>
+        </a>
+        <a href="/login" class="si-buttons-scifi__style-5__button-2">
+            <span>Login</span>
+            <helper-1></helper-1>
+            <helper-2></helper-2>
+            <shine></shine>
+            <ripple></ripple>
+        </a>
+    {% else %}
+        <a href="/map" class="si-buttons-scifi__style-5__button-2">
+            <span>Play Game</span>
+            <helper-1></helper-1>
+            <helper-2></helper-2>
+            <shine></shine>
+            <ripple></ripple>
+        </a>
+        <a href="/logout" class="si-buttons-scifi__style-5__button-2">
+            <span>Logout</span>
+            <helper-1></helper-1>
+            <helper-2></helper-2>
+            <shine></shine>
+            <ripple></ripple>
+        </a>
+    {% endif %}
+  </div>
+</header>
+
+<div class="centered-form">
+  <div class="form-container">
+    <h2>Welcome Back</h2>
+    <form action="/login" method="POST">
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="email" placeholder="Enter email" name="email" required>
+        <label for="email">Email</label>
+      </div>
+
+      <div class="form-floating mb-4 password-wrapper">
+        <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pswd" required>
+        <label for="pwd">Password</label>
+        
+        <i class="bi bi-eye toggle-password" onclick="togglePassword(this)"></i>
+      </div>
+      
+      <form action="/login" method="POST">
+        <button href="/news" class="si">
+              <span>Login</span>
+              <helper-1></helper-1>
+              <helper-2></helper-2>
+              <shine></shine>
+              <ripple></ripple>
+        </button>
+      </form>
+    </form>
+    <div class="auth-actions">
+      <h6 class="signin-text">New to BrainByte? Create an account.</h6>
+
+      <a href="/signin" class="si-buttons-scifi__style-5__button-2">
+        <span>Sign In</span>
+        <helper-1></helper-1><helper-2></helper-2><shine></shine><ripple></ripple>
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+function togglePassword(icon) {
+  const passwordInput = document.getElementById('pwd');
+
+  if (passwordInput.type === 'password') {
+    passwordInput.type = 'text';
+    icon.classList.remove('bi-eye');
+    icon.classList.add('bi-eye-slash');
+  } else {
+    passwordInput.type = 'password';
+    icon.classList.remove('bi-eye-slash');
+    icon.classList.add('bi-eye');
+  }
+}
+</script>
+{% if error %}
+<script>
+    // This only runs if the 'error' variable is present from Flask
+    window.addEventListener('load', function() {
+        const terminal = document.getElementById('system-terminal');
+        if (terminal) {
+            terminal.innerText = "{{ error }}";
+            terminal.style.display = 'block'; // Make it visible now
+            terminal.classList.add('terminal-flicker');
+            
+            // Hide it after 3 seconds
+            setTimeout(() => {
+                terminal.style.display = 'none';
+                terminal.classList.remove('terminal-flicker');
+            }, 3000);
+        }
+    });
+</script>
+{% endif %}
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BrainByte - World Map</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='map.css') }}">
+</head>
+<body class="map-page">
+    <div id="system-terminal" class="system-terminal"></div>
+    <header class="game-hud">
+    <div class="hud-left">
+        <div class="player-avatar">
+            <img src="/static/profile.png" alt="Player">
+        </div>
+
+        <div class="progress-section">
+            <span class="level-label">Level {{ user_stats['level'] }}</span>
+            <div class="xp-container">
+                <div class="xp-fill" style="width: {{ xp_percentage }}%;"></div>
+            </div>
+            <small class="xp-text-detail">
+                {{ current_progress }} / {{ xp_needed }} XP
+            </small>
+        </div>
+
+        <button class="hud-icon-btn" onclick="toggleNewsModule()" title="System News">
+            <div class="icon-stack">
+                <img src="/static/compact-discD.png" alt="News" class="nav-icon-img">
+                <span class="icon-label">NEWS</span>
+            </div>
+        </button>
+
+        <button class="hud-icon-btn quest-btn-margin" onclick="toggleQuestLog()" title="Quests">
+            <div class="icon-stack">
+                <img src="/static/open-folder.png" id="quest-icon" alt="Quest Log" class="nav-icon-img">
+                <span class="icon-label">QUESTS</span>
+            </div>
+        </button>
+
+        <button class="hud-icon-btn" onclick="toggleStudyModule()" title="Study Guide">
+            <div class="icon-stack">
+                <img src="/static/disc.png" alt="Study Guide" class="nav-icon-img">
+                <span class="icon-label">STUDY</span>
+            </div>
+        </button>
+
+        <div id="quest-log" class="quest-panel">
+            <div class="quest-header">
+                <h3>QUESTS</h3>
+                <button onclick="toggleQuestLog()" class="close-btn">×</button>
+            </div>
+            <div class="quest-list">
+                <div class="quest-item">
+                    <p><strong>Complete Level 1</strong></p>
+                    <small>Reward: 100 XP</small>
+                </div>
+                <div class="quest-item locked">
+                    <p><strong>Unlock Level 2</strong></p>
+                    <small>Reward: 200 XP</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="hud-right">
+        <a class="si-buttons-scifi__style-8__button-4" href="/" style="margin-right:11px;">
+            <span>Exit</span>
+            <helper-1></helper-1>
+            <shine></shine>
+            <ripple></ripple>
+        </a>
+    </div>
+</header>
+
+    <main class="map-container">
+        {% for level in all_levels %}
+        <div class="map-node level-{{ level['id'] }} {{ 'unlocked' if user_stats['level'] >= level['id'] else 'locked' }}" 
+            data-name="{{ level['name'] | capitalize }} Tier {{ level['difficulty'] }}" 
+            data-subject="{{ level['name'] | capitalize }}" 
+            data-diff="{{ level['difficulty'] }}" 
+            data-xp="{{ level['exp_reward'] }}"
+            onclick="openLevel({{ level['id'] }})">
+            <div class="node-triangle"></div>
+            <span class="node-label">Level {{ level['id'] }}</span>
+        </div>
+        {% endfor %}
+    </main>
+
+    <div class="cursor-glow"></div>
+
+    <div id="level-tooltip" class="level-tooltip" style="display: none;">
+        <div class="tooltip-content">
+            <h4 id="tooltip-name">---</h4>
+            <div class="tooltip-divider"></div>
+            <p>Subject: <span id="tooltip-subject">---</span></p>
+            <p>Difficulty: <span id="tooltip-difficulty">---</span></p>
+            <p>Reward: <span id="tooltip-xp">---</span> XP</p>
+        </div>
+    </div>
+    <div id="quiz-overlay" class="quiz-modal-backdrop" style="display: none;">
+        <div class="quiz-container-scifi">
+            <div class="quiz-main-content">
+                <h2 id="modal-level-title"></h2>
+                <div class="question-box">
+                    <p id="modal-question-text">Loading question...</p>
+                </div>
+                <div id="modal-answer-grid" class="answer-grid-scifi">
+                    </div>
+            </div>
+
+            <div id="quiz-feedback" class="feedback-box"></div>
+
+            <div class="quiz-footer">
+                <button class="si-buttons-scifi__style-5__button-2" onclick="closeLevel()">
+                    <span>Abandon Level</span>
+                    <helper-1></helper-1> <shine></shine>      <ripple></ripple>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="news-module" class="quiz-modal-backdrop" style="display: none;">
+        <div class="review-form-container" style="text-align: left; max-width: 900px; position: relative;">
+            <div class="quest-header">
+                <h2 style="border: none; margin: 0;">Global Transmissions</h2>
+                <button onclick="toggleNewsModule()" class="close-log-btn" style="position: absolute; right: 20px; top: 20px;">×</button>
+            </div>
+            
+            <div class="news-list-container" style="max-height: 60vh; overflow-y: auto; margin-top: 20px;">
+                {% for update in news_items %}
+                <div class="news-item" style="border-bottom: 1px solid rgba(71, 183, 216, 0.2); padding: 20px 0; margin-bottom: 10px;">
+                    <div style="color: #47b7d8; font-family: monospace; font-size: 0.85rem; margin-bottom: 5px;">
+                        TIMESTAMP: {{ update['date'] }} | ID: {{ update['patch_id'] }}
+                    </div>
+                    <h3 style="color: #ffffff; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">
+                        {{ update['title'] }}
+                    </h3>
+                    
+                    <div class="news-content-wrapper collapsed">
+                        <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.5;">
+                            {{ update['content'] }}
+                        </p>
+                    </div>
+
+                    <button class="read-more-btn si-buttons-scifi__style-5__button-2" 
+                            onclick="toggleReadMore(this)" 
+                            style="display: none; margin-top: 10px; padding: 5px 15px; min-height: unset; font-size: 12px;">
+                        <span>Read More</span>
+                        <helper-1></helper-1><helper-2></helper-2><shine></shine><ripple></ripple>
+                    </button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div id="study-module" class="quiz-modal-backdrop" style="display: none;">
+        <div class="quiz-container-scifi">
+            <div class="quest-header">
+                <h3>DATABASE: <span id="study-page-title">SYSTEM BASICS</span></h3>
+                <button onclick="toggleStudyModule()" class="close-log-btn">×</button>
+            </div>
+            
+            <div class="study-page" id="study-p1">
+                <div class="study-content">
+                    <section class="study-section">
+                        <h4>01. SYSTEM INITIATION (TIER 1)</h4>
+                        <p>• <strong>The Print Command:</strong> Use <code>print()</code> to output data. For example, <code>print(2 + 2)</code> outputs <code>4</code>.</p>
+                        <p>• <strong>Variables:</strong> Created by assigning a value with <code>=</code> (e.g., <code>x = 5</code>). Python is <strong>Case-Sensitive</strong>, so <code>myVar</code> and <code>myvar</code> are different.</p>
+                        <p>• <strong>Naming Rules:</strong> Names must start with a letter or underscore (<code>_</code>). They <strong>cannot</strong> start with a number or contain spaces. A variable can not have a name starting with a number.</p>
+                        <p>• <strong>Comments:</strong> Use <code>#</code> for single-line notes. Use triple quotes <code>'''</code> for multi-line logs.</p>
+                        <p>• <strong>Code Blocks:</strong> Python uses <strong>Indentation</strong> (whitespace) to define blocks of code instead of brackets.</p>
+                        <p>• <strong>Data Types:</strong> Common types are <strong>int</strong> (whole numbers), <strong>float</strong> (decimals), and <strong>str</strong> (text inside quotes like <code>'123'</code>). Use <code>type()</code> to check a variable's type.</p>
+                        <p>• <strong>File Format:</strong> All Python scripts must use the <code>.py</code> extension.</p>
+                    </section>
+
+                    {% if user_stats['level'] >= 2 %}
+                    <section class="study-section" style="margin-top:25px;">
+                        <h4>02. DATA PROCESSING (TIER 2)</h4>
+                        <p>• <strong>Type Conversion:</strong> Change data types using <code>int()</code>, <code>float()</code>, or <code>str()</code>. Example: <code>int('10')</code> converts text to a number.</p>
+                        <p>• <strong>System Input:</strong> The <code>input()</code> function always captures user data as a <strong>String</strong>, even if they type a number.</p>
+                        <p>• <strong>String Tools:</strong> Use <code>len()</code> to get the number of characters. Access specific characters using <strong>Indexing</strong>: <code>'Python'[0]</code> is <code>'P'</code>.</p>
+                        <p>• <strong>Floor Division:</strong> The <code>//</code> operator divides and rounds <strong>down</strong> to the nearest whole number (e.g., <code>10 // 3 = 3</code>).</p>
+                        <p>• <strong>Type Errors:</strong> You cannot add a String to an Integer directly (e.g., <code>'5' + 5</code> causes an error).</p>
+                        <p>• <strong>Special Characters:</strong> Use <code>\n</code> inside a string to create a <strong>New Line</strong>.</p>
+                        <p>• <strong>Booleans:</strong> Represent True or False. Note that <code>bool(0)</code> is always <code>False</code>.</p>
+                    </section>
+                    {% else %}
+                    <section class="study-section locked-study" style="margin-top:25px; opacity: 0.4;">
+                        <h4>02. [DATA ENCRYPTED]</h4>
+                        <p>Upgrade to Level 2 to unlock advanced data processing entries.</p>
+                    </section>
+                    {% endif %}
+
+                    {% if user_stats['level'] >= 3 %}
+                    <section class="study-section" style="margin-top:25px;">
+                        <h4>03. CORE LOGIC (TIER 3)</h4>
+                        <p>• <strong>Advanced Math:</strong> Use <code>**</code> for exponents (e.g., <code>2 ** 3 = 8</code>). Use <code>%</code> (Modulo) to find the <strong>Remainder</strong> of a division (e.g., <code>10 % 3 = 1</code>).</p>
+                        <p>• <strong>String Methods:</strong> Change case with <code>.upper()</code> or <code>.lower()</code>. Use <code>.strip()</code> to remove whitespace from the ends.</p>
+                        <p>• <strong>String Slicing:</strong> Extract a range of characters with <code>[start:end]</code>. For example, <code>'Hello World'[0:5]</code> is <code>'Hello'</code>.</p>
+                        <p>• <strong>F-Strings:</strong> The best way to format text: <code>f"Age: {a}"</code> inserts the variable <code>a</code> into the string.</p>
+                        <p>• <strong>Sequence Operations:</strong> Use <code>*</code> to repeat strings (e.g., <code>'abc' * 3</code> is <code>'abcabcabc'</code>).</p>
+                        <p>• <strong>Membership:</strong> Use <code>in</code> to check if a value exists inside a sequence (e.g., <code>'a' in 'apple'</code> is <code>True</code>).</p>
+                        <p>• <strong>Advanced Booleans:</strong> Any non-empty string is considered <code>True</code>, so <code>bool('False')</code> is actually <strong>True</strong>.</p>
+                    </section>
+                    {% elif user_stats['level'] >= 1 %}
+                    <section class="study-section locked-study" style="margin-top:25px; opacity: 0.4;">
+                        <h4>03. [DATA ENCRYPTED]</h4>
+                        <p>Upgrade to Level 3 to unlock core logic and sequence protocols.</p>
+                    </section>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="study-page" id="study-p2" style="display: none;">
+                <div class="study-content">
+                    {% if user_stats['level'] >= 4 %}
+                    <section class="study-section">
+                        <h4 style="color: #ffffff;">04. ARITHMETIC PROTOCOLS (TIER 1)</h4>
+                        <p>• <strong>Math Operators:</strong> Use <code>+</code> (Add), <code>-</code> (Sub), <code>*</code> (Mul), and <code>/</code> (Div). Remember that <code>/</code> always returns a <strong>Float</strong>.</p>
+                        <p>• <strong>The Remainder (%):</strong> The <strong>Modulo</strong> operator gives you what is left over after division (e.g., <code>10 % 3</code> is <code>1</code>).</p>
+                        <p>• <strong>Exponents (**):</strong> Use double asterisks for powers. <code>2 ** 3</code> is 2 to the power of 3, which equals <code>8</code>.</p>
+                        <p>• <strong>Comparisons:</strong> These return Booleans (True/False). 
+                            <code>==</code> (Equal), <code>!=</code> (Not Equal), <code>></code> (Greater), <code></code> (Less).</p>
+                    </section>
+                    {% else %}
+                    <section class="study-section locked-study" style="margin-top:25px; opacity: 0.4;">
+                        <h4 style="color: #ffffff;">04. [DATA ENCRYPTED]</h4>
+                        <p>Upgrade to Level 4 to unlock basic operator protocols.</p>
+                    </section>
+                    {% endif %}
+
+                    {% if user_stats['level'] >= 5 %}
+                    <section class="study-section" style="margin-top:25px;">
+                        <h4 style="color: #ffffff;">05. LOGICAL GATES (TIER 2)</h4>
+                        <p>• <strong>AND Gate:</strong> Returns <code>True</code> only if <strong>both</strong> statements are true (e.g., <code>5 > 3 and 10 > 5</code>).</p>
+                        <p>• <strong>OR Gate:</strong> Returns <code>True</code> if <strong>at least one</strong> statement is true.</p>
+                        <p>• <strong>NOT Gate:</strong> Reverses the result. <code>not(True)</code> becomes <code>False</code>.</p>
+                        <p>• <strong>Concatenation:</strong> Use <code>+</code> to join two strings together: <code>'Dev' + 'Ops'</code> becomes <code>'DevOps'</code>.</p>
+                    </section>
+                    {% else %}
+                    <section class="study-section locked-study" style="margin-top:25px; opacity: 0.4;">
+                        <h4 style="color: #ffffff;">05. [DATA ENCRYPTED]</h4>
+                        <p>Upgrade to Level 5 to unlock logic gate data.</p>
+                    </section>
+                    {% endif %}
+
+                    {% if user_stats['level'] >= 6 %}
+                    <section class="study-section" style="margin-top:25px;">
+                        <h4 style="color: #ffffff;">06. ASSIGNMENT ENCRYPTION (TIER 3)</h4>
+                        <p>• <strong>Increment (+=):</strong> Shortcut for adding to a variable. <code>x += 3</code> is the same as <code>x = x + 3</code>.</p>
+                        <p>• <strong>Decrement (-=):</strong> Shortcut for subtracting from a variable.</p>
+                        <p>• <strong>Identity:</strong> Use <code>is</code> to check if two variables point to the exact same object in memory.</p>
+                    </section>
+                    {% else %}
+                    <section class="study-section locked-study" style="margin-top:25px; opacity: 0.4;">
+                        <h4 style="color: #ffffff;">06. [DATA ENCRYPTED]</h4>
+                        <p>Upgrade to Level 6 to unlock assignment shortcut keys.</p>
+                    </section>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="study-page" id="study-p3" style="display: none;">
+                <div class="study-content">
+                    {% if user_stats['level'] >= 7 %}
+                    <section class="study-section">
+                        <h4 style="color: #ffffff;">07. LIST PROTOCOLS (TIER 1)</h4>
+                        <p>• <strong>Definition:</strong> Lists are ordered collections that are <strong>Mutable</strong> (can be changed). Defined using square brackets: <code>my_list = [1, 2, 3]</code>.</p>
+                        <p>• <strong>Zero-Indexing:</strong> The first item is always at index <code>0</code>. (e.g. <code>my_list[0]</code> retrieves the first element.).</p>
+                        <p>• <strong>Length:</strong> Use <code>len(my_list)</code> to see how many items are stored in the sequence.</p>
+                        <p>• <strong>Mixing Types:</strong> A single list can contain different data types, such as <code>[1, "Data", 3.5]</code>.</p>
+                    </section>
+                    {% else %}
+                    <section class="study-section locked-study" style="margin-top:25px; opacity: 0.4;">
+                        <h4 style="color: #ffffff;">07. [DATA ENCRYPTED]</h4>
+                        <p>Upgrade to Level 7 to unlock List protocols.</p>
+                    </section>
+                    {% endif %}
+
+                    {% if user_stats['level'] >= 8 %}
+                    <section class="study-section" style="margin-top:25px;">
+                        <h4 style="color: #ffffff;">08. SEQUENCE MODIFICATION (TIER 2)</h4>
+                        <p>• <strong>Appending:</strong> Use <code>.append(item)</code> to add a new element to the <strong>end</strong> of a list.</p>
+                        <p>• <strong>Inserting:</strong> Use <code>.insert(index, item)</code> to place an element at a specific position.</p>
+                        <p>• <strong>Removing:</strong> Use <code>.remove(item)</code> to delete the first occurrence of a value, or <code>.pop()</code> to remove the last item. In case of removing more items, you can abjust the variable inside <code>.pop()</code> to determinate the last item of your lists. (e.g. x = [2, 3, 4, 5], <code>x.pop(1)</code> the new x will be <code>[2, 3])</code><div class=""></div> </p>
+                        <p>• <strong>Sorting:</strong> Use <code>.sort()</code> to organize items alphabetically or numerically.</p>
+                        <p>• <strong>Clearing:</strong> Use <code>.clear()</code> to empty all the variables of a list.</p>
+                        <p>• <strong>Copying:</strong> Use <code>.copy()</code> to make a new list.</p>
+                    </section>
+                    {% else %}
+                    <section class="study-section locked-study" style="margin-top:25px; opacity: 0.4;">
+                        <h4 style="color: #ffffff;">08. [DATA ENCRYPTED]</h4>
+                        <p>Upgrade to Level 8 to unlock sequence modification tools.</p>
+                    </section>
+                    {% endif %}
+
+                    {% if user_stats['level'] >= 9 %}
+                    <section class="study-section" style="margin-top:25px;">
+                        <h4 style="color: #ffffff;">09. TUPLE ENCRYPTION (TIER 3)</h4>
+                        <p>• <strong>Definition:</strong> Tuples are <strong>Immutable</strong> (cannot be changed after creation). Defined using parentheses: <code>my_tuple = (1, 2, 3)</code>.</p>
+                        <p>• <strong>Safety:</strong> Because they cannot be changed, tuples are faster and "safer" for data that should remain constant.</p>
+                        <p>• <strong>Single Item:</strong> To create a tuple with one item, you <strong>must</strong> include a trailing comma: <code>(5,)</code>.</p>
+                        <p>• <strong>Nesting:</strong> Sequences can contain other sequences, creating "Nested Lists" or "Nested Tuples".</p>
+                    </section>
+                    {% else %}
+                    <section class="study-section locked-study" style="margin-top:25px; opacity: 0.4;">
+                        <h4 style="color: #ffffff;">09. [DATA ENCRYPTED]</h4>
+                        <p>Upgrade to Level 9 to unlock Tuple encryption data.</p>
+                    </section>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="quiz-footer study-pagination">
+                <button class="nav-arrow" onclick="changeStudyPage(-1)">«</button>
+                <div class="page-numbers">
+                    <span class="page-num active" onclick="setStudyPage(1)">1</span>
+
+                    <span class="page-num {{ 'locked-page' if user_stats['level'] < 4 }}" 
+                        onclick="{{ 'setStudyPage(2)' if user_stats['level'] >= 4 else 'denyAccess()' }}">
+                        2 {% if user_stats['level'] < 4 %} <i class="bi bi-lock-fill" style="font-size: 10px;"></i>{% endif %}
+                    </span>
+
+                    <span class="page-num {{ 'locked-page' if user_stats['level'] < 7 }}" 
+                        onclick="{{ 'setStudyPage(3)' if user_stats['level'] >= 7 else 'denyAccess()' }}">
+                        3 {% if user_stats['level'] < 7 %} <i class="bi bi-lock-fill" style="font-size: 10px;"></i>{% endif %}
+                    </span>
+                </div>
+                <button class="nav-arrow" onclick="changeStudyPage(1)">»</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="level-up-modal" class="level-up-overlay" style="display: none;">
+        <div class="level-up-card">
+            <h1 class="glow-text">LEVEL UP!</h1>
+            <p>SYSTEM UPGRADED TO LEVEL <span id="new-level-display"></span></p>
+            <button onclick="location.reload()" class="si-buttons-scifi__style-5__button-2">
+                <span>Continue</span>
+                <helper-1></helper-1>
+                <shine></shine>
+                <ripple></ripple>
+            </button>
+        </div>
+    </div>
+
+
+    <script>
+        const USER_LEVEL = {{ user_stats['level'] }};
+        const USER_XP = {{ user_stats['exp'] }};
+    </script>
+    <script src="{{ url_for('static', filename='map.js') }}"></script>
+</body>
+</html>

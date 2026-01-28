@@ -1,0 +1,11 @@
+Step 1.
+Open the BrainByte folder 
+Step 2.
+Run the setup.py (optionally on python or terminal)
+Note : 
+If the BrainByte shortcut cant load the image, delete the shortcut and run the setup.py again.
+Step 3.
+Ready to go.
+
+Copyright (c) 2024 George Spachis. All rights reserved. The code in this repository may not be modified, distributed, or used without explicit permission.
+This project was created for a university subject.

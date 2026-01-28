@@ -1,0 +1,404 @@
+@import url('https://fonts.googleapis.com/css2?family=Jura&display=swap');
+*, h1, h2, h3, h4, h5, h6{
+    box-sizing: border-box;
+    font-family: Jura, monospace;
+}
+
+/* This targets ONLY the button inside the login box */
+.auth-actions .si-buttons-scifi__style-5__button-2 {
+    width: 100% !important;        /* Stretch to match the Login button */
+    max-width: none !important;    /* Override any constraints */
+    margin: 10px 0 !important;      /* Vertical spacing */
+    display: flex !important;
+}
+
+/* This ensures the 'New to BrainByte' text is centered and spaced */
+.auth-actions h6 {
+    color: #47b7d8 !important; /* Matches your neon cyan theme */
+    font-family: 'Jura', sans-serif !important;
+    text-align: center;
+    
+    /* This adds the space you asked for */
+    margin-top: 25px !important; 
+    margin-bottom: 25px !important;
+    
+    letter-spacing: 1px;
+    font-weight: 400;
+    opacity: 0.9;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  background-color: #05080f;
+  overflow: hidden;
+}
+
+/* Moving edge light */
+.edge-light {
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.edge-light::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      45deg,
+      transparent 48%,
+      rgba(0, 255, 255, 0.35) 50%,
+      transparent 52%
+    );
+
+  /* Make the animation ping-pong */
+  animation: edgeSweep 20s linear infinite alternate;
+}
+
+@keyframes edgeSweep {
+  from {
+    transform: translate(-20%, -20%);
+  }
+  to {
+    transform: translate(20%, 20%);
+  }
+}
+
+
+
+
+
+
+
+
+/* Top menu bar */
+.menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  padding: 0 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #003a5c4d;
+  background-color: #003a5c4d;
+  z-index: 1000;
+
+  background-color: rgba(2, 5, 15, 0.8) !important; /* Darker background to see borders */
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid #47b7d8;
+}
+
+/* Left and right groups */
+.menu-left,
+.menu-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Icon / image placeholder */
+.icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    filter: drop-shadow(0 0 5px #47b7d8);
+    overflow: hidden;       /* Ensures the image doesn't leak out of the circle */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;      /* Makes the image fill the circle nicely */
+}
+
+
+
+/* Centered content */
+.content {
+    height: 100vh;
+    padding-top: 80px; /* space for fixed menu */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #ffffff;
+}
+
+.content h1 {
+    font-size: 64px;
+    margin-bottom: 20px;
+    
+
+}
+
+.content p {
+    font-size: 22px;
+    margin: 6px 0;
+}
+
+
+
+.review-form-container {
+  width: 80%;
+  max-width: 800px;
+  margin: 100px auto 30px;
+  background: rgba(11, 10, 17, 0.9);
+  border: 1px solid #47b7d8;
+  padding: 30px;
+  clip-path: polygon(0 15px, 15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%);
+  max-height: 80vh; 
+  overflow-y: auto; 
+  padding-right: 15px;
+  scrollbar-gutter: stable;
+}
+textarea {
+  width: 100%;
+  height: 120px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid #47b7d8;
+  color: #fff;
+  padding: 15px;
+  margin-bottom: 20px;
+  resize: none;
+}
+.review-list {
+  width: 80%;
+  max-width: 800px;
+  margin: 0 auto 100px;
+}
+.review-card {
+  background: rgba(71, 183, 216, 0.1);
+  border-left: 4px solid #47b7d8;
+  padding: 20px;
+  margin-bottom: 15px;
+  color: white;
+}
+.review-meta {
+  color: #47b7d8;
+  font-size: 0.8rem;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+/* Specifically target headings inside your transmission containers */
+.review-form-container h2, 
+.review-list h2 {
+    
+    color: #47b7d8 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 3px !important;
+    margin-bottom: 25px;
+    border-bottom: 1px solid rgba(71, 183, 216, 0.3);
+    padding-bottom: 10px;
+    display: block; /* Ensures the border-bottom spans the width */
+}
+
+.review-form-container::-webkit-scrollbar {
+    width: 6px;
+}
+.review-form-container::-webkit-scrollbar-thumb {
+    background: #47b7d8;
+    border-radius: 10px;
+}
+
+/* NEWS TRUNCATION STYLES */
+.news-content-wrapper {
+    max-height: 1000px; /* High enough for full text */
+    overflow: hidden;
+    transition: max-height 0.6s cubic-bezier(0, 1, 0, 1); /* Smooth sliding */
+}
+
+.news-content-wrapper.collapsed {
+    max-height: 60px; /* Limits to about 2-3 lines of text */
+    /* Add a fade effect at the bottom when collapsed */
+    mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+}
+
+/* Ensure the button stays visible and correct theme */
+.read-more-btn {
+    --font-size: 12px;
+    --border-cut: 3px;
+    margin-top: 10px;
+}
+
+/*----------------.si-buttons-scifi__style-5__button-2 -------------------------------------------------*/
+[class*='si-buttons-scifi'] span {
+    position: relative;
+    z-index: 2; /* Forces text to stay above the background/glow */
+    pointer-events: none;
+}
+
+.si-buttons-scifi__style-5__button-2 {
+  /* == BUTTON SETTINGS == */
+  --font-family: Jura, monospace;
+  --font-size: 16px;
+  --color: white;
+  --background-color: #0d0a11;
+  --border-color: #47b7d8;
+  --border-width: 1px;
+  --border-cut: 5px;
+  --button-shape: polygon(0 var(--border-cut), var(--border-cut) 0, calc(50% - var(--border-cut) - 30px) 0,
+   calc(50% - var(--border-cut) - 30px + var(--border-cut)) var(--border-cut), calc(calc(50% - var(--border-cut) - 30px) + var(--border-cut) + 60px) var(--border-cut),
+    calc(calc(50% - var(--border-cut) - 30px) + var(--border-cut) + 60px + var(--border-cut)) 0, calc(100% - var(--border-cut)) 0, 100% var(--border-cut),
+     100% calc(100% - var(--border-cut)), calc(100% - var(--border-cut)) 100%, var(--border-cut) 100%, 0 calc(100% - var(--border-cut)));
+}
+
+.si-buttons-scifi__style-5__button-2 {
+  font-family: var(--font-family);
+  font-size: var(--font-size);
+  color: var(--color) !important;
+  border: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+  align-self: center;
+  vertical-align: middle;
+  appearance: none;
+  box-sizing: border-box;
+  text-decoration: none;
+  position: relative;
+  word-spacing: 3px;
+  letter-spacing: 0.4px;
+  cursor: pointer;
+  transition: 0.3s;
+  line-height: initial;
+  min-height: 30px;
+  min-width: 70px;
+  white-space: nowrap;
+  z-index: 1;
+  user-select: none;
+  outline: 0;
+  padding: 15px 30px;
+  background-color: transparent;
+}
+
+.si-buttons-scifi__style-5__button-2:before,
+.si-buttons-scifi__style-5__button-2:after{
+  content: '';
+  inset: 0;
+  background: var(--border-color);
+  position: absolute;
+  z-index: -1;
+  clip-path: var(--button-shape);
+  box-shadow: inset 0 0 25px -10px var(--border-color);
+}
+
+.si-buttons-scifi__style-5__button-2:after{
+  inset: var(--border-width);
+  background: var(--background-color);
+}
+
+.si-buttons-scifi__style-5__button-2 helper-1:before{
+  content: '';
+  position: absolute;
+  height: calc(var(--border-cut) - 2px);
+  width: 63px;
+  background: var(--border-color);
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 2px) 100%, 2px 100%);
+}
+
+.si-buttons-scifi__style-5__button-2 helper-2:before,
+.si-buttons-scifi__style-5__button-2 helper-2:after{
+  content: '';
+  position: absolute;
+  height:80%;
+  width: 3px;
+  top: 50%;
+  left: 5px;
+  transform: translateY(-50%);
+  clip-path: polygon(0 0, 100% 3px, 100% calc(100% - 3px), 0 100%);
+  background: var(--border-color);
+  opacity: 0.3;
+}
+
+.si-buttons-scifi__style-5__button-2 helper-2:after{
+  left: unset;
+  clip-path: polygon(0 3px, 100% 0, 100% 100%, 0 calc(100% - 3px));
+  right: 5px;
+}
+
+[class*='si-buttons-scifi'].disabled,
+[class*='si-buttons-scifi']:disabled{
+  pointer-events:none;
+  opacity:0.5;
+  cursor:default;
+}
+
+
+/* Ripple Animation */
+[class*='si-buttons-scifi'] ripple {
+  inset: 0;
+  position: absolute;
+  overflow: hidden;
+  -webkit-clip-path: var(--button-shape);
+          clip-path: var(--button-shape);
+}
+
+[class*='si-buttons-scifi'].disabled ripple,
+[class*='si-buttons-scifi']:disabled ripple{
+  display:none
+}
+
+[class*='si-buttons-scifi'] ripple:after {
+  content: '';
+  --ripple-gradient: rgb(255, 255, 255);
+  position: absolute;
+  inset: 0 auto 0 -200%;
+  width: 200%;
+  transform: skewX(-20deg);
+  opacity: 0.5;
+  background-image: linear-gradient(to right, transparent, var(--ripple-gradient), transparent);
+}
+
+[mode*='light'] ripple:after {
+  --ripple-gradient: var(--border-color);
+}
+
+[class*='si-buttons-scifi']:hover ripple:after {
+  left: 200%;
+  transition: 1.6s ease;
+}
+
+[class*='si-buttons-scifi'] ripple:before {
+  content: '';
+  --ripple-color: rgb(255, 255, 255);
+  position: absolute;
+  inset: 50%;
+  transform: skewX(-10deg);
+  border-radius: 100vh;
+}
+
+[mode*='light'] ripple:before {
+  --ripple-color: var(--border-color);
+}
+
+[class*='si-buttons-scifi']:focus ripple:before {
+  animation: ripple-animation 0.7s ease-in-out forwards;
+}
+
+[class*='si-buttons-scifi']:active ripple:before {
+  animation: unset;
+}
+
+@keyframes ripple-animation {
+  0% {box-shadow: 0 0 0 0 var(--ripple-color); opacity:0.6}
+  100% {box-shadow: 0 0 0 150px var(--ripple-color); opacity:0}
+}

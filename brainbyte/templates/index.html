@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BrainByte</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="edge-light"></div>
+
+<!-- Top Menu -->
+<header class="menu">
+    <div class="menu-left">
+        <div class="icon">
+            <img src="/static/brain.png" alt="BrainByte Logo">
+        </div>
+
+        <a href="/" class="si-buttons-scifi__style-5__button-2">
+            <span>Home</span>
+            <helper-1></helper-1>
+            <helper-2></helper-2>
+            <shine></shine>
+            <ripple></ripple>
+        </a>
+        <a href="/about" class="si-buttons-scifi__style-5__button-2">
+            <span>About us</span>
+            <helper-1></helper-1>
+            <helper-2></helper-2>
+            <shine></shine>
+            <ripple></ripple>
+        </a>
+        <a href="/news" class="si-buttons-scifi__style-5__button-2">
+            <span>News</span>
+            <helper-1></helper-1>
+            <helper-2></helper-2>
+            <shine></shine>
+            <ripple></ripple>
+        </a>
+        <a href="/contact" class="si-buttons-scifi__style-5__button-2">
+            <span>Contact</span>
+            <helper-1></helper-1>
+            <helper-2></helper-2>
+            <shine></shine>
+            <ripple></ripple>
+        </a>
+    </div>
+
+    <div class="menu-right">
+        {% if not logged_in %}
+        <a href="/signin" class="si-buttons-scifi__style-5__button-2">
+            <span>Sign in</span>
+            <helper-1></helper-1>
+            <helper-2></helper-2>
+            <shine></shine>
+            <ripple></ripple>
+        </a>
+        <a href="/login" class="si-buttons-scifi__style-5__button-2">
+            <span>Login</span>
+            <helper-1></helper-1>
+            <helper-2></helper-2>
+            <shine></shine>
+            <ripple></ripple>
+        </a>
+    {% else %}
+        <a href="/map" class="si-buttons-scifi__style-5__button-2">
+            <span>Play Game</span>
+            <helper-1></helper-1>
+            <helper-2></helper-2>
+            <shine></shine>
+            <ripple></ripple>
+        </a>
+        <a href="/logout" class="si-buttons-scifi__style-5__button-2">
+            <span>Logout</span>
+            <helper-1></helper-1>
+            <helper-2></helper-2>
+            <shine></shine>
+            <ripple></ripple>
+        </a>
+    {% endif %}
+    </div>
+</header>
+
+
+<!-- Center Content -->
+<main class="content">
+    <h1>BrainByte</h1>
+    <p>Do you want to learn new skills?</p>
+    <p>Do you like playing video games?</p>
+    <p>Well then, welcome to BrainByte.</p>
+</main>
+
+
+</body>
+</html>

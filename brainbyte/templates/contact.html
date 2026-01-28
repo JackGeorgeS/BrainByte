@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BrainByte - Transmission</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
+    
+</head>
+<body>
+    <div class="edge-light"></div>
+    
+    <header class="menu">
+        <div class="menu-left">
+            <a href="/" class="si-buttons-scifi__style-5__button-2"><span>Home</span><helper-1></helper-1><helper-2></helper-2><shine></shine><ripple></ripple></a>
+        </div>
+    </header>
+
+    <div class="review-form-container">
+        <h2>System Feedback</h2>
+        {% if logged_in %}
+        <form action="/contact" method="POST">
+            <textarea name="review_content" placeholder="Enter your transmission here, Operative..." required></textarea>
+            <button type="submit" class="si-buttons-scifi__style-5__button-2">
+                <span>Submit Review</span>
+                <helper-1></helper-1><helper-2></helper-2><shine></shine><ripple></ripple>
+            </button>
+        </form>
+        {% else %}
+        <p style="color: #ff6044;">Access Denied: You must be <a href="/login" style="color: #47b7d8;">logged in</a> to leave a review.</p>
+        {% endif %}
+    </div>
+
+    <div class="review-list">
+        <h2>Recent Transmissions</h2>
+        {% for review in reviews %}
+        <div class="review-card">
+            <div class="review-meta">User: {{ review.username }} | Logged: {{ review.timestamp }}</div>
+            <div class="review-content">{{ review.content }}</div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
